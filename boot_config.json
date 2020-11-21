@@ -1,0 +1,41 @@
+{
+    "system": {
+        "time1": 1,
+        "time2": 10,
+        "time3": 18,
+        "offTime1": 2,
+        "offTime2": 1,
+        "offTime3": 1,
+        "offTime4": 12
+    },
+    "system_adv": {
+        "loopInterval": 5
+    },
+    "network": {
+        "ap": {
+            "AP_SSID": "DushanCustomPump",
+            "AP_PASSWORD": "gaberje123",
+            "AP_IP": "192.168.4.1"
+        },
+        "station": {
+            "SSID": "Lokavec moj doma",
+            "SSID_PASSWORD": "mackaimastirinoge",
+            "WLAN_NUM_OF_RETRIES": 10,
+            "WLAN_ACTIVE": true,
+            "HOSTNAME": "mojapumpa"
+        }
+    },
+    "webrepl": {
+        "WEB_REPL_PASSWORD": "32esp",
+        "WEB_REPL_ACTIVE": true
+    },
+    "ntp": {
+        "NTP_HOST": "time.ijs.si",
+        "NTP_SYNC_PERIOD_S": 600,
+        "NTP_SYNC_ACTIVE": false
+    },
+    "hardware": {
+        "RELAY_1": 15,
+        "RELAY_2": 13
+    }
+}
