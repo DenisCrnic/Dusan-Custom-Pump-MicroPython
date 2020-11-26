@@ -9,7 +9,9 @@
         "offTime4": 12
     },
     "system_adv": {
-        "loopInterval": 5
+        "heartbeat_min": 10,
+        "loopInterval": 5,
+        "ap_on_time": 30
     },
     "network": {
         "ap": {
@@ -35,7 +37,10 @@
         "NTP_SYNC_ACTIVE": false
     },
     "hardware": {
-        "RELAY_1": 15,
-        "RELAY_2": 13
+        "RELAY_1": 14,
+        "RELAY_2": 12,
+        "LED_R": 15,
+        "LED_G": 13,
+        "AP_PIN": 16
     }
 }

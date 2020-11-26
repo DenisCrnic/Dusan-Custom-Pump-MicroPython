@@ -1,7 +1,9 @@
 import sys
-import utime
 import uos
 import uerrno
+
+import DS3231_RTC
+rtc = DS3231_RTC.DS3231_RTC()
 
 CRITICAL = 50
 ERROR    = 40
@@ -22,12 +24,13 @@ class logging:
 
     level = NOTSET
 
-    def __init__(self, name, folder, filename, max_file_size):
+    def __init__(self, name, folder, filename, max_file_size, del_line_num):
         self.name = name
         self.folder = folder
         self.filename = filename
         self.full_path = self.folder + self.filename
         self.max_file_size = max_file_size
+        self.del_line_num = del_line_num
 
     def _level_str(self, level):
         l = _level_dict.get(level)
@@ -53,7 +56,7 @@ class logging:
             # print("Opening new file")
             with open(log_file, 'w') as new_file:
                 # print("Writing new file")
-                for line in data[50:]:
+                for line in data[self.del_line_num:]:
                     new_file.write(line)
                 # print("Closing new file")
                 new_file.close()
@@ -85,7 +88,7 @@ class logging:
             _stream.close()
 
     def get_time(self):
-        time_formatted = "{}.{}.{} {}:{}:{}".format(str(utime.localtime()[2]), str(utime.localtime()[1]), str(utime.localtime()[0]), str(utime.localtime()[3]), str(utime.localtime()[4]), str(utime.localtime()[5]))
+        time_formatted = "{}.{}.{} {}:{}:{}".format(str(rtc.getTime()[0]), str(rtc.getTime()[1]), str(rtc.getTime()[0]), str(rtc.getTime()[3]), str(rtc.getTime()[4]), str(rtc.getTime()[5]))
         return time_formatted
     def debug(self, msg, *args):
         self.log(DEBUG, msg, *args)
@@ -112,10 +115,10 @@ class logging:
 _level = INFO
 _loggers = {}
 
-def getLogger(name, folder, filename, max_file_size):
+def getLogger(name, folder, filename, max_file_size, del_line_num=5):
     if name in _loggers:
         return _loggers[name]
-    l = logging(name, folder, filename, max_file_size)
+    l = logging(name, folder, filename, max_file_size, del_line_num)
     _loggers[name] = l
     return l
 

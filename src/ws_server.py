@@ -14,7 +14,7 @@ import uasyncio as asyncio
 import logging
 # Logging initialisation
 logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(name="ws_server.py", folder="/logs/", filename="ws_server.log", max_file_size=5000)
+log = logging.getLogger(name="ws_server.py", folder="/logs/", filename="ws_server.log", max_file_size=1000)
 
 class WebSocketClient:
     def __init__(self, conn, callback):
@@ -27,24 +27,22 @@ class WebSocketClient:
             
             msg = self.connection.read()
             if not msg == None:
+                log.info("Raw msg:{}".format(msg))
                 msg = msg.decode('utf-8')
-                log.info("#######################################")
-                log.info("WebSocket MSG before json decode: {}".format(msg))
-                msg = ujson.loads(msg)
-                cmd = self.getList(msg)[0]
-                log.info("WebSocket cmd: {}".format(cmd))
-                # TODO: rewrite this to work with loop.create_task!
-                loop = asyncio.get_event_loop()
-                task_ws = loop.create_task(self.callback(cmd, msg, self.connection))
-                loop.run_until_complete(task_ws)
-                # self.callback(cmd, msg, self.connection)
+                #print("#######################################")
+                #print("WebSocket MSG before json decode: {}".format(msg))
+                msg_decod = ujson.loads(msg)
+                cmd = self.getList(msg_decod)[0]
+                #print("WebSocket msg_decode: {}".format(cmd))
+                self.callback(cmd, msg_decod, self.connection)
+
                 
         except ClientClosedError:
             log.error("ClientClosedError")
             self.connection.close()
 
         except ValueError as error:
-            log.error("ValueError")
+            log.error("ValueError: '{}'".format(msg))
             pass
         else:
             pass
@@ -89,7 +87,6 @@ class WebSocketServer:
             return
 
         if poll_events[0][1] & uselect.POLLIN:
-            # log.info(accept_handler)
             accept_handler()
 
     def _accept_conn(self):
@@ -99,12 +96,8 @@ class WebSocketServer:
         # This works because on ap we accept only one client and NEW client 
         # is the corect one and not previous (in case previous client connected to ap
         # did not close WS connection properly before closing WiFi )
-        log.info(1)
         for client in self._clients:
             client.connection.close()
-
-            log.info(2)
-        log.info(3)
 
         log.info("Client connection from: {}".format(remote_addr))
 
@@ -161,7 +154,6 @@ class WebSocketServer:
         if self._listen_s:
             self.stop()
         self._setup_conn(port)
-        log.info("Started WebSocket server.")
 
     def process_all(self):
         self._check_new_connections(self._accept_conn)

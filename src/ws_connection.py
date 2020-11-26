@@ -61,3 +61,4 @@ class WebSocketConnection:
         self.ws = None
         if self.close_callback:
             self.close_callback(self)
+        print("Closed.")
